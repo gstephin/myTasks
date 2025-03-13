@@ -10,10 +10,9 @@ import kotlinx.coroutines.launch
 
 class TaskViewModel(private val dao: TaskDao) : ViewModel() {
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
-    val tasks: StateFlow<List<Task>> = _tasks
+    var tasks: StateFlow<List<Task>> = _tasks
 
     private val _pendingActions = MutableStateFlow<List<PendingAction>>(emptyList())
-    val pendingActions: StateFlow<List<PendingAction>> = _pendingActions
 
     init {
         loadTasks()
@@ -31,7 +30,13 @@ class TaskViewModel(private val dao: TaskDao) : ViewModel() {
             loadTasks()
         }
     }
+    fun updateTaskOrder(newList: List<Task>) {
+        _tasks.value = newList
+      /*  viewModelScope.launch {
+            dao.insertAll(newList)
 
+        }*/
+    }
     fun updateTask(task: Task) {
         viewModelScope.launch {
             dao.update(task)

@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     // Use kapt for room-compiler instead of implementation
+    implementation(libs.lottie.compose)
     kapt(libs.androidx.room.compiler)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.core.ktx)

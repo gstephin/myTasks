@@ -15,8 +15,11 @@ jetbrains-annotations = "23.0.0"
 accompanist = "0.36.0"
 datastore = "1.1.1"
 composeVersion = "1.5.4"
+lottie-compose = "6.2.0"  # Use the latest version
+
 
 [libraries]
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie-compose" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
