@@ -15,10 +15,12 @@ Settings screen for managing primary color preferences and back navigation.
    bash
    Copy code
    git clone https://github.com/gstephin/myTasks.git
-   cd myTasks
-2.
 
-Install Dependencies
+
+ cd myTasks
+
+   
+2.  Install Dependencies
 Make sure to use the correct version of Android Studio and Gradle. You can install dependencies by
 syncing your project in Android Studio.
 
