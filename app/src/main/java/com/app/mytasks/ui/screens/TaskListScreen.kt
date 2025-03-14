@@ -174,8 +174,6 @@ fun TaskListScreen(
             }
         }
         val isEmpty = displayedTasks.isEmpty()
-
-
         if (isEmpty) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -300,8 +298,10 @@ fun TaskListScreen(
                         },
                     state = stateList,
                 ) {
+
                     itemsIndexed(
                         items = displayedTasks,
+                        key = {task,id -> id.id},
                         contentType = { index, _ -> DraggableItem(index = index) }) { index, task ->
                         AnimatedVisibility(
                             visible = displayedTasks.contains(task),
@@ -321,61 +321,58 @@ fun TaskListScreen(
                             } else {
                                 Modifier
                             }
+
                             TaskItem(
                                 task = task,
                                 onClick = { onTaskClick(task) },
                                 onDelete = { viewModel.deleteTask(task) },
-
                                 modifier = modifier.pointerInput(Unit) {
-                                    detectHorizontalDragGestures(
-                                        onDragEnd = {
-                                            if (offsetX > 100f) { // Swipe right to complete
-                                                viewModel.completeTask(task)
-                                                scope.launch {
-                                                    val result = snackbarHostState.showSnackbar(
-                                                        message = "Task completed",
-                                                        actionLabel = "Undo",
-                                                        duration = SnackbarDuration.Short
-                                                    )
-                                                    if (result == SnackbarResult.ActionPerformed) {
-                                                        viewModel.undoComplete(task)
-                                                    } else {
-                                                        viewModel.clearPendingAction(
-                                                            TaskViewModel.PendingAction.Complete(
-                                                                task
-                                                            )
-                                                        )
-                                                    }
-                                                }
-                                            } else if (offsetX < -100f) { // Swipe left to delete
-                                                viewModel.deleteTask(task)
-                                                scope.launch {
-                                                    val result = snackbarHostState.showSnackbar(
-                                                        message = "Task deleted",
-                                                        actionLabel = "Undo",
-                                                        duration = SnackbarDuration.Short
-                                                    )
-                                                    if (result == SnackbarResult.ActionPerformed) {
-                                                        viewModel.undoDelete(task)
-                                                    } else {
-                                                        viewModel.clearPendingAction(
-                                                            TaskViewModel.PendingAction.Delete(
-                                                                task
-                                                            )
-                                                        )
-                                                    }
+                                    detectHorizontalDragGestures { change, dragAmount ->
+                                        // Update the offset based on the drag amount
+                                        offsetX += dragAmount
+                                        // Consume the gesture so it doesn't propagate further
+                                        change.consume()
+
+                                        // Swipe right to complete task
+                                        if (offsetX > 100f) {
+                                            viewModel.completeTask(task)
+                                            scope.launch {
+                                                val result = snackbarHostState.showSnackbar(
+                                                    message = "Task completed",
+                                                    actionLabel = "Undo",
+                                                    duration = SnackbarDuration.Short
+                                                )
+                                                if (result == SnackbarResult.ActionPerformed) {
+                                                    viewModel.undoComplete(task)
+                                                } else {
+                                                    viewModel.clearPendingAction(TaskViewModel.PendingAction.Complete(task))
                                                 }
                                             }
-                                            offsetX = 0f // Reset offset
-                                        },
-                                        onHorizontalDrag = { change, dragAmount ->
-                                            offsetX += dragAmount
-                                            change.consume()
+                                            offsetX = 0f // Reset offset after completing task
                                         }
-                                    )
 
+                                        // Swipe left to delete task
+                                        if (offsetX < -100f) {
+                                            viewModel.deleteTask(task)
+                                            scope.launch {
+                                                val result = snackbarHostState.showSnackbar(
+                                                    message = "Task deleted",
+                                                    actionLabel = "Undo",
+                                                    duration = SnackbarDuration.Short
+                                                )
+                                                if (result == SnackbarResult.ActionPerformed) {
+                                                    viewModel.undoDelete(task)
+                                                } else {
+                                                    viewModel.clearPendingAction(TaskViewModel.PendingAction.Delete(task))
+                                                }
+                                            }
+                                            offsetX = 0f // Reset offset after deleting task
+                                        }
+                                    }
                                 }
                             )
+
+
                         }
 
                     }
