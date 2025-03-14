@@ -20,7 +20,7 @@ Settings screen for managing primary color preferences and back navigation.
  cd myTasks
 
    
-3.  Install Dependencies
+2.  Install Dependencies
 Make sure to use the correct version of Android Studio and Gradle. You can install dependencies by
 syncing your project in Android Studio.
 
