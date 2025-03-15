@@ -20,7 +20,7 @@
     "title": "Write Unit Tests",
     "description": "Ensure proper test coverage for ViewModel",
     "priority": "LOW",
-    "dueDate": null,
+    "dueDate": 1715047200000,
     "isCompleted": false
   },
   {
@@ -44,7 +44,7 @@
     "title": "Refactor Code",
     "description": "Improve code structure for better maintainability",
     "priority": "HIGH",
-    "dueDate": null,
+    "dueDate": 1715047200000,
     "isCompleted": false
   },
   {
@@ -60,7 +60,7 @@
     "title": "Optimize Performance",
     "description": "Improve app loading time and reduce lag",
     "priority": "MEDIUM",
-    "dueDate": null,
+    "dueDate": 1715047200000,
     "isCompleted": false
   },
   {
@@ -84,7 +84,7 @@
     "title": "Setup CI/CD Pipeline",
     "description": "Configure GitHub Actions for automated testing",
     "priority": "HIGH",
-    "dueDate": null,
+    "dueDate": 1715047200000,
     "isCompleted": false
   },
   {
@@ -92,7 +92,7 @@
     "title": "Attend Standup Meeting",
     "description": "Daily update on project progress",
     "priority": "LOW",
-    "dueDate": null,
+    "dueDate": 1715047200000,
     "isCompleted": true
   },
   {
@@ -108,7 +108,7 @@
     "title": "Implement Dark Mode",
     "description": "Add a toggle to switch themes in the app",
     "priority": "HIGH",
-    "dueDate": null,
+    "dueDate": 1715047200000,
     "isCompleted": false
   },
   {
@@ -132,7 +132,7 @@
     "title": "Optimize Database Queries",
     "description": "Improve efficiency of SQL queries",
     "priority": "LOW",
-    "dueDate": null,
+    "dueDate": 1715047200000,
     "isCompleted": false
   },
   {
@@ -148,7 +148,7 @@
     "title": "Test on Different Devices",
     "description": "Ensure compatibility on various screen sizes",
     "priority": "HIGH",
-    "dueDate": null,
+    "dueDate": 1715047200000,
     "isCompleted": false
   },
   {
