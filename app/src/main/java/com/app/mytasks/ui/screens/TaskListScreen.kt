@@ -6,14 +6,15 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,9 +39,12 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -72,6 +76,15 @@ import com.app.mytasks.viemodel.TaskViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
+/**
+ * TaskListScreen
+ *
+ *
+ * Tasks screen with task list and options.
+ *
+ * @author Stephin
+ * @date 2025-03-12
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
@@ -117,43 +130,39 @@ fun TaskListScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Tasks",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-                actions = {
-                    Row(
-                        modifier = Modifier.padding(end = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        FilterDropdown(filter = filter, onFilterChange = { filter = it })
-                        Spacer(modifier = Modifier.width(4.dp)) // Reduce spacing
-                        SortDropdown(sortBy = sortBy, onSortChange = { sortBy = it })
-                        Spacer(modifier = Modifier.width(4.dp)) // Reduce spacing
+            TopAppBar(title = {
+                Text(
+                    "Tasks",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }, actions = {
+                Row(
+                    modifier = Modifier.padding(end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    FilterDropdown(filter = filter, onFilterChange = { filter = it })
+                    Spacer(modifier = Modifier.width(4.dp)) // Reduce spacing
+                    SortDropdown(sortBy = sortBy, onSortChange = { sortBy = it })
+                    Spacer(modifier = Modifier.width(4.dp)) // Reduce spacing
 
-                        IconButton(
-                            onClick = onSettingsClick,
-                            modifier = Modifier.size(36.dp) // Increase touch target
-                        ) {
-                            Icon(
-                                Icons.Default.Settings,
-                                contentDescription = "Settings",
-                                modifier = Modifier.size(30.dp) // Increase icon size
-                            )
-                        }
+                    IconButton(
+                        onClick = onSettingsClick,
+                        modifier = Modifier.size(36.dp) // Increase touch target
+                    ) {
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = "Settings",
+                            modifier = Modifier.size(30.dp) // Increase icon size
+                        )
                     }
                 }
-            )
+            })
 
 
         },
         floatingActionButton = { BouncyFAB(onAddTask) },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
+        snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
 
         val stateList = rememberLazyListState()
         var draggingItemIndex: Int? by remember {
@@ -176,8 +185,7 @@ fun TaskListScreen(
         val isEmpty = displayedTasks.isEmpty()
         if (isEmpty) {
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
                 LottieAnimation(
@@ -211,97 +219,91 @@ fun TaskListScreen(
                     text = "Task List",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(top = 16.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
                 )
                 LazyColumn(
-                    modifier = Modifier
-                        .pointerInput(key1 = stateList) {
-                            detectDragGesturesAfterLongPress(
-                                onDragStart = { offset ->
-                                    stateList.layoutInfo.visibleItemsInfo
-                                        .firstOrNull { item -> offset.y.toInt() in item.offset..(item.offset + item.size) }
-                                        ?.also {
-                                            (it.contentType as? DraggableItem)?.let { draggableItem ->
-                                                draggingItem = it
-                                                draggingItemIndex = draggableItem.index
-                                            }
-                                        }
-                                },
-                                onDrag = { change, dragAmount ->
-                                    change.consume()
-                                    delta += dragAmount.y
-
-                                    val currentDraggingItemIndex =
-                                        draggingItemIndex ?: return@detectDragGesturesAfterLongPress
-                                    val currentDraggingItem =
-                                        draggingItem ?: return@detectDragGesturesAfterLongPress
-
-                                    val startOffset = currentDraggingItem.offset + delta
-                                    val endOffset =
-                                        currentDraggingItem.offset + currentDraggingItem.size + delta
-                                    val middleOffset = startOffset + (endOffset - startOffset) / 2
-
-                                    val targetItem =
-                                        stateList.layoutInfo.visibleItemsInfo.find { item ->
-                                            middleOffset.toInt() in item.offset..item.offset + item.size &&
-                                                    currentDraggingItem.index != item.index &&
-                                                    item.contentType is DraggableItem
-                                        }
-
-                                    if (targetItem != null) {
-                                        val targetIndex =
-                                            (targetItem.contentType as DraggableItem).index
-                                        onMove(currentDraggingItemIndex, targetIndex)
-                                        draggingItemIndex = targetIndex
-                                        delta += currentDraggingItem.offset - targetItem.offset
-                                        draggingItem = targetItem
-                                    } else {
-                                        val startOffsetToTop =
-                                            startOffset - stateList.layoutInfo.viewportStartOffset
-                                        val endOffsetToBottom =
-                                            endOffset - stateList.layoutInfo.viewportEndOffset
-                                        val scroll =
-                                            when {
-                                                startOffsetToTop < 0 -> startOffsetToTop.coerceAtMost(
-                                                    0f
-                                                )
-
-                                                endOffsetToBottom > 0 -> endOffsetToBottom.coerceAtLeast(
-                                                    0f
-                                                )
-
-                                                else -> 0f
-                                            }
-                                        val canScrollDown =
-                                            currentDraggingItemIndex != displayedTasks.size - 1 && endOffsetToBottom > 0
-                                        val canScrollUp =
-                                            currentDraggingItemIndex != 0 && startOffsetToTop < 0
-                                        if (scroll != 0f && (canScrollUp || canScrollDown)) {
-                                            scrollChannel.trySend(scroll)
+                    modifier = Modifier.pointerInput(key1 = stateList) {
+                        detectDragGesturesAfterLongPress(
+                            onDragStart = { offset ->
+                                stateList.layoutInfo.visibleItemsInfo.firstOrNull { item -> offset.y.toInt() in item.offset..(item.offset + item.size) }
+                                    ?.also {
+                                        (it.contentType as? DraggableItem)?.let { draggableItem ->
+                                            draggingItem = it
+                                            draggingItemIndex = draggableItem.index
                                         }
                                     }
-                                },
-                                onDragEnd = {
-                                    draggingItem = null
-                                    draggingItemIndex = null
-                                    delta = 0f
-                                },
-                                onDragCancel = {
-                                    draggingItem = null
-                                    draggingItemIndex = null
-                                    delta = 0f
-                                },
+                            },
+                            onDrag = { change, dragAmount ->
+                                change.consume()
+                                delta += dragAmount.y
 
-                                )
+                                val currentDraggingItemIndex =
+                                    draggingItemIndex ?: return@detectDragGesturesAfterLongPress
+                                val currentDraggingItem =
+                                    draggingItem ?: return@detectDragGesturesAfterLongPress
 
-                        },
+                                val startOffset = currentDraggingItem.offset + delta
+                                val endOffset =
+                                    currentDraggingItem.offset + currentDraggingItem.size + delta
+                                val middleOffset = startOffset + (endOffset - startOffset) / 2
+
+                                val targetItem =
+                                    stateList.layoutInfo.visibleItemsInfo.find { item ->
+                                        middleOffset.toInt() in item.offset..item.offset + item.size && currentDraggingItem.index != item.index && item.contentType is DraggableItem
+                                    }
+
+                                if (targetItem != null) {
+                                    val targetIndex =
+                                        (targetItem.contentType as DraggableItem).index
+                                    onMove(currentDraggingItemIndex, targetIndex)
+                                    draggingItemIndex = targetIndex
+                                    delta += currentDraggingItem.offset - targetItem.offset
+                                    draggingItem = targetItem
+                                } else {
+                                    val startOffsetToTop =
+                                        startOffset - stateList.layoutInfo.viewportStartOffset
+                                    val endOffsetToBottom =
+                                        endOffset - stateList.layoutInfo.viewportEndOffset
+                                    val scroll = when {
+                                        startOffsetToTop < 0 -> startOffsetToTop.coerceAtMost(
+                                            0f
+                                        )
+
+                                        endOffsetToBottom > 0 -> endOffsetToBottom.coerceAtLeast(
+                                            0f
+                                        )
+
+                                        else -> 0f
+                                    }
+                                    val canScrollDown =
+                                        currentDraggingItemIndex != displayedTasks.size - 1 && endOffsetToBottom > 0
+                                    val canScrollUp =
+                                        currentDraggingItemIndex != 0 && startOffsetToTop < 0
+                                    if (scroll != 0f && (canScrollUp || canScrollDown)) {
+                                        scrollChannel.trySend(scroll)
+                                    }
+                                }
+                            },
+                            onDragEnd = {
+                                draggingItem = null
+                                draggingItemIndex = null
+                                delta = 0f
+                            },
+                            onDragCancel = {
+                                draggingItem = null
+                                draggingItemIndex = null
+                                delta = 0f
+                            },
+
+                            )
+
+                    },
                     state = stateList,
                 ) {
 
                     itemsIndexed(
                         items = displayedTasks,
-                        key = {task,id -> id.id},
+                        key = { task, id -> id.id },
                         contentType = { index, _ -> DraggableItem(index = index) }) { index, task ->
                         AnimatedVisibility(
                             visible = displayedTasks.contains(task),
@@ -309,7 +311,6 @@ fun TaskListScreen(
                             exit = slideOutVertically(targetOffsetY = { -it })
                         ) {
                             var offsetX by remember { mutableStateOf(0f) }
-
                             val modifier = if (draggingItemIndex == index) {
                                 Modifier
                                     .zIndex(1f)
@@ -322,39 +323,12 @@ fun TaskListScreen(
                                 Modifier
                             }
 
-                            TaskItem(
-                                task = task,
-                                onClick = { onTaskClick(task) },
-                                onDelete = { viewModel.deleteTask(task) },
-                                modifier = modifier.pointerInput(Unit) {
-                                    detectHorizontalDragGestures { change, dragAmount ->
-                                        // Update the offset based on the drag amount
-                                        offsetX += dragAmount
-                                        // Consume the gesture so it doesn't propagate further
-                                        change.consume()
-
-                                        // Swipe right to complete task
-                                        if (offsetX > 100f) {
-                                            viewModel.completeTask(task)
+                            val dismissState = rememberSwipeToDismissBoxState(
+                                confirmValueChange = { dismissValue ->
+                                    when (dismissValue) {
+                                        SwipeToDismissBoxValue.EndToStart -> {
                                             scope.launch {
-                                                val result = snackbarHostState.showSnackbar(
-                                                    message = "Task completed",
-                                                    actionLabel = "Undo",
-                                                    duration = SnackbarDuration.Short
-                                                )
-                                                if (result == SnackbarResult.ActionPerformed) {
-                                                    viewModel.undoComplete(task)
-                                                } else {
-                                                    viewModel.clearPendingAction(TaskViewModel.PendingAction.Complete(task))
-                                                }
-                                            }
-                                            offsetX = 0f // Reset offset after completing task
-                                        }
-
-                                        // Swipe left to delete task
-                                        if (offsetX < -100f) {
-                                            viewModel.deleteTask(task)
-                                            scope.launch {
+                                                viewModel.deleteTask(task)
                                                 val result = snackbarHostState.showSnackbar(
                                                     message = "Task deleted",
                                                     actionLabel = "Undo",
@@ -362,15 +336,60 @@ fun TaskListScreen(
                                                 )
                                                 if (result == SnackbarResult.ActionPerformed) {
                                                     viewModel.undoDelete(task)
-                                                } else {
-                                                    viewModel.clearPendingAction(TaskViewModel.PendingAction.Delete(task))
                                                 }
                                             }
-                                            offsetX = 0f // Reset offset after deleting task
+                                            true
                                         }
+
+                                        SwipeToDismissBoxValue.StartToEnd -> {
+                                            scope.launch {
+                                                viewModel.completeTask(task)
+                                                val result = snackbarHostState.showSnackbar(
+                                                    message = "Task Completed",
+                                                    actionLabel = "Undo",
+                                                    duration = SnackbarDuration.Short
+                                                )
+                                                if (result == SnackbarResult.ActionPerformed) {
+                                                    viewModel.undoComplete(task)
+                                                }
+                                            }
+                                            false
+                                        }
+
+                                        else -> false
                                     }
+
                                 }
                             )
+                            SwipeToDismissBox(
+                                state = dismissState,
+                                enableDismissFromStartToEnd = true,
+                                enableDismissFromEndToStart = true,
+                                backgroundContent = {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(horizontal = 16.dp, vertical = 4.dp)
+                                    )
+                                },
+                            ) {
+                                // Apply swipe offset to move the item while swiping
+                                Box(
+                                    modifier = Modifier
+                                        .offset(x = offsetX.dp) // Moves the item visually
+                                        .fillMaxWidth()
+                                        .background(Color.White)
+                                        .padding(4.dp)
+                                ) {
+                                    TaskItem(
+                                        task = task,
+                                        onClick = { onTaskClick(task) },
+                                        onDelete = { viewModel.deleteTask(task) },
+                                        modifier = modifier
+                                    )
+                                }
+
+                            }
 
 
                         }
@@ -398,8 +417,7 @@ fun BouncyFAB(onAddTask: () -> Unit) {
         onClick = {
             isClicked = true
             onAddTask()
-        },
-        modifier = Modifier.scale(scale) // Apply animation
+        }, modifier = Modifier.scale(scale) // Apply animation
     ) {
         Icon(Icons.Default.Add, contentDescription = "Add Task")
     }
@@ -426,13 +444,10 @@ fun FilterDropdown(filter: String, onFilterChange: (String) -> Unit) {
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             listOf("All", "Completed", "Pending").forEach {
-                DropdownMenuItem(
-                    text = { Text(it) },
-                    onClick = {
-                        onFilterChange(it)
-                        expanded = false
-                    }
-                )
+                DropdownMenuItem(text = { Text(it) }, onClick = {
+                    onFilterChange(it)
+                    expanded = false
+                })
             }
         }
     }
@@ -457,13 +472,10 @@ fun SortDropdown(sortBy: String, onSortChange: (String) -> Unit) {
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             listOf("priority", "dueDate", "alphabetically").forEach {
-                DropdownMenuItem(
-                    text = { Text(it) },
-                    onClick = {
-                        onSortChange(it)
-                        expanded = false
-                    }
-                )
+                DropdownMenuItem(text = { Text(it) }, onClick = {
+                    onSortChange(it)
+                    expanded = false
+                })
             }
         }
     }

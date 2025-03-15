@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "title": "Complete Flutter UI",
+    "description": "Design and implement the main screen UI",
+    "priority": "HIGH",
+    "dueDate": 1715047200000,
+    "isCompleted": false
+  },
+  {
+    "id": 2,
+    "title": "Fix API Bugs",
+    "description": "Resolve errors in the authentication API",
+    "priority": "MEDIUM",
+    "dueDate": 1715133600000,
+    "isCompleted": false
+  },
+  {
+    "id": 3,
+    "title": "Write Unit Tests",
+    "description": "Ensure proper test coverage for ViewModel",
+    "priority": "LOW",
+    "dueDate": null,
+    "isCompleted": false
+  },
+  {
+    "id": 4,
+    "title": "Push Code to GitHub",
+    "description": "Commit and push latest project changes",
+    "priority": "HIGH",
+    "dueDate": 1715220000000,
+    "isCompleted": true
+  },
+  {
+    "id": 5,
+    "title": "Prepare for Team Meeting",
+    "description": "Create a report and slides for the sprint review",
+    "priority": "MEDIUM",
+    "dueDate": 1715306400000,
+    "isCompleted": false
+  },
+  {
+    "id": 6,
+    "title": "Refactor Code",
+    "description": "Improve code structure for better maintainability",
+    "priority": "HIGH",
+    "dueDate": null,
+    "isCompleted": false
+  },
+  {
+    "id": 7,
+    "title": "Review PRs",
+    "description": "Check pull requests and provide feedback",
+    "priority": "LOW",
+    "dueDate": 1715392800000,
+    "isCompleted": true
+  },
+  {
+    "id": 8,
+    "title": "Optimize Performance",
+    "description": "Improve app loading time and reduce lag",
+    "priority": "MEDIUM",
+    "dueDate": null,
+    "isCompleted": false
+  },
+  {
+    "id": 9,
+    "title": "Write Documentation",
+    "description": "Update README and API documentation",
+    "priority": "LOW",
+    "dueDate": 1715479200000,
+    "isCompleted": false
+  },
+  {
+    "id": 10,
+    "title": "Research State Management",
+    "description": "Compare Riverpod and Provider for better performance",
+    "priority": "HIGH",
+    "dueDate": 1715565600000,
+    "isCompleted": false
+  },
+  {
+    "id": 11,
+    "title": "Setup CI/CD Pipeline",
+    "description": "Configure GitHub Actions for automated testing",
+    "priority": "HIGH",
+    "dueDate": null,
+    "isCompleted": false
+  },
+  {
+    "id": 12,
+    "title": "Attend Standup Meeting",
+    "description": "Daily update on project progress",
+    "priority": "LOW",
+    "dueDate": null,
+    "isCompleted": true
+  },
+  {
+    "id": 13,
+    "title": "Update Dependencies",
+    "description": "Ensure all libraries are up to date",
+    "priority": "MEDIUM",
+    "dueDate": 1715652000000,
+    "isCompleted": false
+  },
+  {
+    "id": 14,
+    "title": "Implement Dark Mode",
+    "description": "Add a toggle to switch themes in the app",
+    "priority": "HIGH",
+    "dueDate": null,
+    "isCompleted": false
+  },
+  {
+    "id": 15,
+    "title": "Fix UI Bugs",
+    "description": "Resolve issues in layout and animations",
+    "priority": "MEDIUM",
+    "dueDate": 1715738400000,
+    "isCompleted": false
+  },
+  {
+    "id": 16,
+    "title": "Write Integration Tests",
+    "description": "Ensure app flow works as expected",
+    "priority": "HIGH",
+    "dueDate": 1715824800000,
+    "isCompleted": false
+  },
+  {
+    "id": 17,
+    "title": "Optimize Database Queries",
+    "description": "Improve efficiency of SQL queries",
+    "priority": "LOW",
+    "dueDate": null,
+    "isCompleted": false
+  },
+  {
+    "id": 18,
+    "title": "Prepare Release Notes",
+    "description": "Summarize changes for the next version",
+    "priority": "MEDIUM",
+    "dueDate": 1715911200000,
+    "isCompleted": false
+  },
+  {
+    "id": 19,
+    "title": "Test on Different Devices",
+    "description": "Ensure compatibility on various screen sizes",
+    "priority": "HIGH",
+    "dueDate": null,
+    "isCompleted": false
+  },
+  {
+    "id": 20,
+    "title": "Plan Next Sprint",
+    "description": "Outline tasks for the next development cycle",
+    "priority": "MEDIUM",
+    "dueDate": 1715997600000,
+    "isCompleted": false
+  }
+]

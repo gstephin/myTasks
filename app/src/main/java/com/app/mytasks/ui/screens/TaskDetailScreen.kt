@@ -1,6 +1,5 @@
 package com.app.mytasks.ui.screens
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +41,16 @@ import com.app.mytasks.data.Task
 import com.app.mytasks.util.CircularRevealShape
 import java.text.SimpleDateFormat
 import java.util.Locale
+
+/**
+ * TaskDetailScreen
+ *
+ *
+ * Task detail screen with task details and options.
+ *
+ * @author Stephin
+ * @date 2025-03-12
+ */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.jetbrains.annotations)
     implementation(libs.androidx.datastore)
+    implementation(libs.gson)
 }
 
 // Force JetBrains annotations to avoid conflicts

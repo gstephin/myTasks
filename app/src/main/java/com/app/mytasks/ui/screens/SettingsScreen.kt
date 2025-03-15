@@ -38,6 +38,16 @@ import androidx.compose.ui.unit.dp
 import com.app.mytasks.util.ColorPreferences
 import kotlinx.coroutines.launch
 
+/**
+ * SettingsScreen
+ *
+ *
+ * Settings screen with color preferences.
+ *
+ * @author Stephin
+ * @date 2025-03-12
+ */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(

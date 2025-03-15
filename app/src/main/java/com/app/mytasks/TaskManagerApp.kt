@@ -22,6 +22,15 @@ import com.app.mytasks.ui.screens.TaskListScreen
 import com.app.mytasks.ui.theme.TaskManagerTheme
 import com.app.mytasks.viemodel.TaskViewModel
 
+/**
+ * TaskManagerApp
+ *
+ *
+ * TaskManager Application entry point.
+ *
+ * @author Stephin
+ * @date 2025-03-12
+ */
 @Composable
 fun TaskManagerApp(viewModel: TaskViewModel) {
     val navController = rememberNavController()

@@ -1,21 +1,48 @@
 package com.app.mytasks.viemodel
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.mytasks.data.Task
 import com.app.mytasks.data.TaskDao
+import com.app.mytasks.util.FileUtil
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class TaskViewModel(private val dao: TaskDao) : ViewModel() {
+
+/**
+ * TaskViewModel
+ *
+ * ViewModel for managing tasks.
+ *
+ * @author Stephin
+ * @date 2025-03-12
+ */
+
+class TaskViewModel(private val dao: TaskDao, application: Application) : ViewModel() {
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
     var tasks: StateFlow<List<Task>> = _tasks
 
     private val _pendingActions = MutableStateFlow<List<PendingAction>>(emptyList())
 
+    private val gson = Gson()
+
     init {
-        loadTasks()
+
+        //sample data for testing
+        viewModelScope.launch {
+            if (dao.getTaskCount() == 0) { // Insert only if DB is empty
+                val json = FileUtil().loadJSONFromAssets(application, "data.json")
+                val taskList: List<Task> =
+                    gson.fromJson(json, object : TypeToken<List<Task>>() {}.type)
+                dao.insertAll(taskList)
+            }
+            loadTasks()
+
+        }
     }
 
     private fun loadTasks() {
@@ -30,13 +57,7 @@ class TaskViewModel(private val dao: TaskDao) : ViewModel() {
             loadTasks()
         }
     }
-    fun updateTaskOrder(newList: List<Task>) {
-        _tasks.value = newList
-      /*  viewModelScope.launch {
-            dao.insertAll(newList)
 
-        }*/
-    }
     fun updateTask(task: Task) {
         viewModelScope.launch {
             dao.update(task)

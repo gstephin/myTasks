@@ -3,6 +3,15 @@ package com.app.mytasks.data
 import android.content.Context
 import androidx.room.*
 
+/**
+ * TaskDao.kt
+ *
+ * Database access object for the Task entity.
+ *
+ * @author Stephin
+ * @date 2025-03-12
+ */
+
 @Dao
 interface TaskDao {
     @Query("SELECT * FROM tasks")
@@ -13,6 +22,9 @@ interface TaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(task: List<Task>)
+
+    @Query("SELECT COUNT(*) FROM tasks")
+    suspend fun getTaskCount(): Int
 
     @Delete
     suspend fun delete(task: Task)
