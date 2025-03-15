@@ -1,6 +1,9 @@
 Task Management App
-A task management app built using Jetpack Compose, Kotlin, and Room Database. It allows users to
-manage their tasks, select colors for the app's UI, and check the app's version.
+
+
+
+     A task management app built using Jetpack Compose, Kotlin, and Room Database. It allows users to
+     manage their tasks, select colors for the app's UI, and check the app's version.
 
 Features
 Task management with sorting and filtering options.
