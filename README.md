@@ -71,7 +71,5 @@ This project is licensed under the MIT License – see the LICENSE file for deta
 [MIT](https://choosealicense.com/licenses/mit/)
 
 
-## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
