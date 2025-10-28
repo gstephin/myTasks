@@ -12,8 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.app.mytasks.data.Priority
-import com.app.mytasks.data.Task
+import com.app.mytasks.data.entities.Priority
+import com.app.mytasks.data.entities.Task
 
 /**
  * TaskCreationScreen

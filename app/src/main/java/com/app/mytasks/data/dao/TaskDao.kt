@@ -1,7 +1,8 @@
-package com.app.mytasks.data
+package com.app.mytasks.data.dao
 
 import android.content.Context
 import androidx.room.*
+import com.app.mytasks.data.entities.Task
 
 /**
  * TaskDao.kt

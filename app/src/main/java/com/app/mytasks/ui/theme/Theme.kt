@@ -22,7 +22,6 @@ private val LightColorScheme = lightColorScheme(
     onBackground = Color.Black,
     onSurface = Color.Black
 )
-
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFFBB86FC), // Default will be overridden
     secondary = Color(0xFF03DAC6),
@@ -57,7 +56,6 @@ fun TaskManagerTheme(
             darkIcons = !darkTheme
         )
     }
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

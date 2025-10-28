@@ -53,7 +53,7 @@ fun CircularProgressbar(
         }
 
         // Animated progress arc
-        Canvas(modifier = Modifier.size(100.dp)) {
+        Canvas(modifier = Modifier.size(100.dp )) {
             drawArc(
                 color = if (progressAnimation >= 1f) completedColor else progressIndicatorColor,
                 startAngle = -90f,
@@ -70,4 +70,15 @@ fun CircularProgressbar(
             color = Color.Black
         )
     }
+}
+
+
+class User {
+    var name: String = "Unknown"
+        get() = field.uppercase() // Use backing field
+        set(value) {
+            if (value.isNotBlank()) {
+                field = value.trim()
+            }
+        }
 }

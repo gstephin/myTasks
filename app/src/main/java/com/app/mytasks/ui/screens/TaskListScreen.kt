@@ -1,5 +1,4 @@
 package com.app.mytasks.ui.screens
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -9,8 +8,10 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListItemInfo
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -33,7 +36,9 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -60,6 +65,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,7 +75,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.app.mytasks.R
-import com.app.mytasks.data.Task
+import com.app.mytasks.data.entities.Task
 import com.app.mytasks.ui.components.CircularProgressbar
 import com.app.mytasks.ui.components.TaskItem
 import com.app.mytasks.viemodel.TaskViewModel
@@ -127,7 +133,6 @@ fun TaskListScreen(
         mutableOriginalTasks.add(toIndex, movedTask)
         displayedTasks = mutableOriginalTasks
     }
-
     Scaffold(
         topBar = {
             TopAppBar(title = {
@@ -165,6 +170,8 @@ fun TaskListScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
 
         val stateList = rememberLazyListState()
+
+        var showListView by remember { mutableStateOf(true) }
         var draggingItemIndex: Int? by remember {
             mutableStateOf(null)
         }
@@ -182,8 +189,10 @@ fun TaskListScreen(
                 stateList.scrollBy(diff)
             }
         }
+
         val isEmpty = displayedTasks.isEmpty()
         if (isEmpty) {
+
             Box(
                 modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
@@ -221,11 +230,78 @@ fun TaskListScreen(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
                 )
-                LazyColumn(
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "Total Tasks: $totalTasks",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = "Completed: $completedTasks",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                    Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        IconButton(
+                            onClick = { showListView = true },
+                            modifier = Modifier.size(36.dp) // Increase touch target
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.list),
+                                contentDescription = "List",
+                                modifier = Modifier.size(30.dp),
+                                tint = if (showListView) MaterialTheme.colorScheme.primary else LocalContentColor.current
+
+                            )
+                        }
+                        IconButton(
+                            onClick = { showListView = false },
+                            modifier = Modifier.size(36.dp) // Increase touch target
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.menu),
+                                contentDescription = "Grid",
+                                modifier = Modifier.size(20.dp),// Increase icon size
+                                tint = if (!showListView) MaterialTheme.colorScheme.primary else LocalContentColor.current
+
+                            )
+                        }
+                    }
+                }
+
+                if (!showListView) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(20) { index ->
+                            Text(
+                                "Grid item #$index",
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
+                    }
+                } else LazyColumn(
                     modifier = Modifier.pointerInput(key1 = stateList) {
                         detectDragGesturesAfterLongPress(
                             onDragStart = { offset ->
-                                stateList.layoutInfo.visibleItemsInfo.firstOrNull { item -> offset.y.toInt() in item.offset..(item.offset + item.size) }
+                                stateList.layoutInfo.visibleItemsInfo.firstOrNull { item ->
+                                    offset.y.toInt() in item.offset..(item.offset + item.size)
+                                }
                                     ?.also {
                                         (it.contentType as? DraggableItem)?.let { draggableItem ->
                                             draggingItem = it
@@ -249,7 +325,9 @@ fun TaskListScreen(
 
                                 val targetItem =
                                     stateList.layoutInfo.visibleItemsInfo.find { item ->
-                                        middleOffset.toInt() in item.offset..item.offset + item.size && currentDraggingItem.index != item.index && item.contentType is DraggableItem
+                                        middleOffset.toInt() in item.offset..item.offset +
+                                                item.size && currentDraggingItem.index != item.index
+                                                && item.contentType is DraggableItem
                                     }
 
                                 if (targetItem != null) {
@@ -359,8 +437,7 @@ fun TaskListScreen(
                                         else -> false
                                     }
 
-                                }
-                            )
+                                })
                             SwipeToDismissBox(
                                 state = dismissState,
                                 enableDismissFromStartToEnd = true,
@@ -440,7 +517,7 @@ fun FilterDropdown(filter: String, onFilterChange: (String) -> Unit) {
             onValueChange = {},
             readOnly = true,
             label = { Text("Filter") },
-            modifier = Modifier.menuAnchor()
+            modifier = Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable)
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             listOf("All", "Completed", "Pending").forEach {

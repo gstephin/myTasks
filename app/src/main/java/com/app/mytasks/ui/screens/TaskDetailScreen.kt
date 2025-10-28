@@ -37,7 +37,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.app.mytasks.data.Task
+import com.app.mytasks.data.entities.Task
 import com.app.mytasks.util.CircularRevealShape
 import java.text.SimpleDateFormat
 import java.util.Locale

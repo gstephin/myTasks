@@ -17,8 +17,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.app.mytasks.data.Priority
-import com.app.mytasks.data.Task
+import com.app.mytasks.data.entities.Priority
+import com.app.mytasks.data.entities.Task
 import java.text.SimpleDateFormat
 import java.util.*
 
