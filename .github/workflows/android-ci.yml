@@ -35,10 +35,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Decode Keystore
-        run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > my-release-key.jks
+        run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > tasks.jks
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=my-release-key.jks \
+        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=tasks.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
           -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
