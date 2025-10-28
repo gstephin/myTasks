@@ -3,6 +3,7 @@ package com.app.mytasks.domain.repository
 import com.app.mytasks.data.entities.Task
 import com.app.mytasks.data.dao.TaskDao
 import com.app.mytasks.data.remote.ApiService
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -28,4 +29,7 @@ class TaskRepositoryImpl @Inject constructor(
 
 
     override suspend fun deleteTask(task: Task) = dao.delete(task)
+
+    override suspend fun getAllTasksFlow(): Flow<List<Task>> = dao.getAllTasksFlow()
+
 }

@@ -1,6 +1,7 @@
 package com.app.mytasks.domain.repository
 
 import com.app.mytasks.data.entities.Task
+import kotlinx.coroutines.flow.Flow
 
 // domain/repository/TaskRepository.kt
 interface TaskRepository {
@@ -8,6 +9,7 @@ interface TaskRepository {
     suspend fun insertTask(task: Task)
     suspend fun insertAllTask(task: List<Task>)
     suspend fun updateTask(task: Task)
-    suspend fun getTaskCount():Int
+    suspend fun getTaskCount(): Int
     suspend fun deleteTask(task: Task)
+    suspend fun getAllTasksFlow(): Flow<List<Task>>
 }

@@ -3,6 +3,7 @@ package com.app.mytasks.data.dao
 import android.content.Context
 import androidx.room.*
 import com.app.mytasks.data.entities.Task
+import kotlinx.coroutines.flow.Flow
 
 /**
  * TaskDao.kt
@@ -32,6 +33,11 @@ interface TaskDao {
 
     @Update
     suspend fun update(task: Task)
+
+    @Query("SELECT * FROM tasks ORDER BY id DESC")
+    fun getAllTasksFlow(): Flow<List<Task>>
+
+
 }
 
 @Database(entities = [Task::class], version = 1, exportSchema = false)
