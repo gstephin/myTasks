@@ -40,6 +40,8 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease -PMYAPP_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} -PMYAPP_KEY_ALIAS=${{ secrets.KEY_ALIAS }} -PMYAPP_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
 
+      - name: Check build outputs
+        run: ls -R app/build/outputs
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
