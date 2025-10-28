@@ -1,23 +1,36 @@
-package com.example.mytasks.di
+package com.app.mytasks.di
 
-import com.app.mytasks.data.dao.TaskDao
-import com.app.mytasks.data.remote.ApiService
-import com.app.mytasks.domain.repository.TaskRepository
-import com.app.mytasks.domain.repository.TaskRepositoryImpl
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * FirebaseModule
+ *
+ * @author stephingeorge
+ * @date 28/10/2025
+ */
+
+
 @Module
 @InstallIn(SingletonComponent::class)
-object RepositoryModule {
+object FirebaseModule {
 
     @Provides
     @Singleton
-    fun provideTaskRepository(
-        dao: TaskDao,
-        api: ApiService
-    ): TaskRepository = TaskRepositoryImpl(dao, api)
+    fun provideFirebaseAuth(): FirebaseAuth {
+        // ✅ create and return FirebaseAuth instance
+        return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirestore(): FirebaseFirestore {
+        // ✅ create and return Firestore instance
+        return FirebaseFirestore.getInstance()
+    }
 }
