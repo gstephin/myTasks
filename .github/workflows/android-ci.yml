@@ -38,10 +38,8 @@ jobs:
         run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > tasks.jks
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease \
-         -PMYAPP_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
-         -PMYAPP_KEY_ALIAS=${{ secrets.KEY_ALIAS }} \
-         -PMYAPP_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease -PMYAPP_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} -PMYAPP_KEY_ALIAS=${{ secrets.KEY_ALIAS }} -PMYAPP_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+
 
 
       - name: Upload to Firebase App Distribution
