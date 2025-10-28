@@ -1,16 +1,14 @@
-name: Android CI/CD
+name: Android CI/CD with Firebase
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, master]
   pull_request:
-    branches:
-      - main
+    branches: [main, master]
 
 jobs:
   build:
-    name: Build & Test
+    name: Build & Distribute
     runs-on: ubuntu-latest
 
     steps:
@@ -33,20 +31,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission for Gradle
         run: chmod +x gradlew
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+      - name: Decode Keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > my-release-key.jks
 
-      - name: Run Unit Tests
-        run: ./gradlew testDebugUnitTest
+      - name: Build Release APK
+        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=my-release-key.jks \
+          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+          -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+          -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
-      - name: Lint Check
-        run: ./gradlew lint
-
-      - name: Upload build artifacts (APK)
-        uses: actions/upload-artifact@v4
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          name: debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          appId: 1:1234567890:android:abcdef1234567890abcdef
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: internal-testers
+          file: app/build/outputs/apk/release/app-release.apk
+          releaseNotes: "Automated build from GitHub Actions 🚀"
