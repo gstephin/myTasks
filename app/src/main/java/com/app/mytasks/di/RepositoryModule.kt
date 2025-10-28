@@ -1,4 +1,4 @@
-package com.example.mytasks.di
+package com.app.mytasks.di
 
 import com.app.mytasks.data.dao.TaskDao
 import com.app.mytasks.data.remote.ApiService
