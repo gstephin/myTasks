@@ -41,12 +41,12 @@ jobs:
         run: ./gradlew assembleRelease -PMYAPP_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} -PMYAPP_KEY_ALIAS=${{ secrets.KEY_ALIAS }} -PMYAPP_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
 
 
-
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: 1:1234567890:android:abcdef1234567890abcdef
-          token: ${{ secrets.FIREBASE_TOKEN }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           groups: internal-testers
           file: app/build/outputs/apk/release/app-release.apk
-          releaseNotes: "Automated build from GitHub Actions 🚀"
+          releaseNotes: "🚀 Automated release build"
+
