@@ -13,7 +13,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
     fun provideDatabase(app: Application): TaskDatabase =
@@ -21,5 +20,4 @@ object DatabaseModule {
 
     @Provides
     fun provideTaskDao(db: TaskDatabase): TaskDao = db.taskDao()
-
 }
