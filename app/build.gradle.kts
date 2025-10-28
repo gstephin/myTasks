@@ -20,7 +20,14 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    signingConfigs {
+        create("release") {
+            storeFile = file("tasks.jks")
+            storePassword = project.findProperty("Dubai@2025") as String?
+            keyAlias = project.findProperty("task") as String?
+            keyPassword = project.findProperty("Dubai@2025") as String?
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -30,6 +37,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
