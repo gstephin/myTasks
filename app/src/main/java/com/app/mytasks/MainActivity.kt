@@ -5,11 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.mytasks.util.ColorPreferences
-import com.app.mytasks.data.dao.TaskDatabase
 import com.app.mytasks.ui.theme.TaskManagerTheme
 
 import com.app.mytasks.viemodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * MainActivity
@@ -22,10 +22,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+        @Inject lateinit var colorPreferences: ColorPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val colorPreferences = ColorPreferences(this)
 
         setContent {
             // ✅ Hilt automatically provides this ViewModel
