@@ -20,12 +20,13 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
     signingConfigs {
         create("release") {
             storeFile = file("tasks.jks")
-            storePassword = project.findProperty("Dubai@2025") as String?
-            keyAlias = project.findProperty("task") as String?
-            keyPassword = project.findProperty("Dubai@2025") as String?
+            storePassword = project.findProperty("MYAPP_STORE_PASSWORD") as String?
+            keyAlias = project.findProperty("MYAPP_KEY_ALIAS") as String?
+            keyPassword = project.findProperty("MYAPP_KEY_PASSWORD") as String?
         }
     }
     buildTypes {
