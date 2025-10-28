@@ -21,4 +21,5 @@ object DatabaseModule {
 
     @Provides
     fun provideTaskDao(db: TaskDatabase): TaskDao = db.taskDao()
+
 }
