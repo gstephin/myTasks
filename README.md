@@ -25,7 +25,10 @@ Settings Screen: Manage UI theme and navigate back seamlessly
 
 
 ## Features
-
+- Firebase Integration: User authentication and data storage
+- Clean Architecture: MVVM pattern for maintainable code
+- Github Actions: CI/CD for automated testing and deployment
+- Dependency Injection: Hilt for managing dependencies
 - Task Management: Add, edit, delete, and organize tasks
 - Sorting & Filtering: Easily sort and filter tasks based on different criteria
 - Theme Customization: Choose a primary UI color and persist the selection
