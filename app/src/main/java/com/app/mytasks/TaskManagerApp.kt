@@ -2,23 +2,22 @@ package com.app.mytasks
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.app.mytasks.ui.screens.LoginScreen
 import com.app.mytasks.util.ColorPreferences
 import com.app.mytasks.ui.screens.SettingsScreen
 import com.app.mytasks.ui.screens.TaskCreationScreen
 import com.app.mytasks.ui.screens.TaskDetailScreen
 import com.app.mytasks.ui.screens.TaskListScreen
 import com.app.mytasks.ui.theme.TaskManagerTheme
+import com.app.mytasks.viemodel.AuthViewModel
 import com.app.mytasks.viemodel.TaskViewModel
 
 /**
@@ -32,7 +31,7 @@ import com.app.mytasks.viemodel.TaskViewModel
  */
 
 @Composable
-fun TaskManagerApp(viewModel: TaskViewModel) {
+fun TaskManagerApp(viewModel: TaskViewModel, authViewModel: AuthViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val colorPreferences = remember { ColorPreferences(context) }
@@ -40,8 +39,26 @@ fun TaskManagerApp(viewModel: TaskViewModel) {
     val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
     val screenHeightPx = with(density) { LocalConfiguration.current.screenHeightDp.dp.toPx() }
     val defaultOffset = Offset(screenWidthPx / 2, screenHeightPx / 2)
+
+    val currentUser = authViewModel.repository.currentUser()
+
+    val startDestination = if (currentUser != null) "task_list" else "login"
     TaskManagerTheme(colorPreferences = colorPreferences) {
-        NavHost(navController, startDestination = "task_list") {
+        NavHost(navController, startDestination = startDestination) {
+
+
+            composable("login") {
+                LoginScreen(
+                    viewModel = authViewModel,
+                    onLoggedIn = {
+                        // Navigate to main list after login
+                        navController.navigate("task_list") {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                )
+            }
+
             composable("task_list") {
                 TaskListScreen(
                     viewModel = viewModel,

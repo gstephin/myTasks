@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.mytasks.util.ColorPreferences
 import com.app.mytasks.ui.theme.TaskManagerTheme
+import com.app.mytasks.viemodel.AuthViewModel
 
 import com.app.mytasks.viemodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,9 +31,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             // ✅ Hilt automatically provides this ViewModel
             val viewModel: TaskViewModel = hiltViewModel()
+            val authViewModel: AuthViewModel = hiltViewModel()
 
             TaskManagerTheme(colorPreferences = colorPreferences) {
-                TaskManagerApp(viewModel)
+                TaskManagerApp(viewModel,authViewModel)
             }
         }
     }
