@@ -7,14 +7,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.app.mytasks.util.ColorPreferences
+import com.app.mytasks.viemodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -52,7 +57,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun SettingsScreen(
     colorPreferences: ColorPreferences,
-    onBack: () -> Unit
+    authViewModel: AuthViewModel,
+    onBack: () -> Unit,
+    onLogout: () -> Unit // ✅ new param to navigate to login
 ) {
     val scope = rememberCoroutineScope()
     val currentColor by colorPreferences.primaryColor.collectAsState(initial = ColorPreferences.DEFAULT_COLOR)
@@ -112,8 +119,31 @@ fun SettingsScreen(
             }
             item {
                 AppVersionInfo()
+                Button(
+                    onClick = {
+                        authViewModel.logout()
+                        onLogout() // navigate to login
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Logout",
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
+            // 🚪 Logout button
+
+
         }
+
     }
 }
 

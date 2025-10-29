@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-     val repository: AuthRepository
+    val repository: AuthRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AuthState>(AuthState.Idle)
@@ -35,6 +35,12 @@ class AuthViewModel @Inject constructor(
             }
     }
 
+
+    fun logout() {
+        repository.logout()
+        _uiState.value = AuthState.Idle
+    }
+
     fun register(email: String, password: String) = viewModelScope.launch {
         _uiState.value = AuthState.Loading
         repository.register(email, password)
@@ -46,7 +52,6 @@ class AuthViewModel @Inject constructor(
             }
     }
 
-    fun logout() = repository.logout()
 }
 
 sealed class AuthState {

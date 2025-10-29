@@ -15,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -91,6 +90,7 @@ fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(), onLoggedIn: () -> Un
                     it.isBlank() -> "Email cannot be empty"
                     !android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches() ->
                         "Enter a valid email address"
+
                     else -> null
                 }
             },
@@ -162,6 +162,7 @@ fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(), onLoggedIn: () -> Un
             is AuthState.Success -> {
                 LaunchedEffect(Unit) { onLoggedIn() }
             }
+
             is AuthState.Error -> {
                 Text(
                     text = (uiState as AuthState.Error).message,
@@ -170,6 +171,7 @@ fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(), onLoggedIn: () -> Un
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }
+
             else -> {}
         }
     }

@@ -87,7 +87,13 @@ fun TaskManagerApp(viewModel: TaskViewModel, authViewModel: AuthViewModel) {
             composable("settings") {
                 SettingsScreen(
                     colorPreferences = colorPreferences,
-                    onBack = { navController.popBackStack() }
+                    authViewModel = authViewModel,
+                    onBack = { navController.popBackStack() },
+                    onLogout = {
+                        navController.navigate("login") {
+                            popUpTo("task_list") { inclusive = true } // ✅ Clears back stack
+                        }
+                    }
                 )
             }
         }
