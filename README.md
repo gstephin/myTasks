@@ -1,6 +1,5 @@
 
-# 📌 Task Management App
-
+# 📌 Task Management App 
 
 A task management app built using Jetpack Compose, Kotlin, and Room Database. It allows users to:
 ✅ Manage tasks with sorting and filtering options
@@ -8,15 +7,8 @@ A task management app built using Jetpack Compose, Kotlin, and Room Database. It
 📌 Check the app version with proper exception handling
 📊 View an animated progress bar for task completion
 ⚙️ Configure settings for color preferences and navigation
-# ✨ Features
-Task Management: Add, edit, delete, and organize tasks
-Sorting & Filtering: Easily sort and filter tasks based on different criteria
-Theme Customization: Choose a primary UI color and persist the selection
-Progress Indicator: Animated circular progress bar to track task completion
-App Version Display: Shows the app version with exception handling
-Settings Screen: Manage UI theme and navigate back seamlessly
 
-## Badges
+# Badges
 
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
@@ -24,7 +16,7 @@ Settings Screen: Manage UI theme and navigate back seamlessly
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
 
-## Features
+# ✨ Features
 - Firebase Integration: User authentication and data storage
 - Clean Architecture: MVVM pattern for maintainable code
 - Github Actions: CI/CD for automated testing and deployment
@@ -36,7 +28,7 @@ Settings Screen: Manage UI theme and navigate back seamlessly
 
 
 
-## Installation
+# Installation
 
 1️⃣ Clone the Repository
 
