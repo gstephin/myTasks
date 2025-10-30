@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 /**
@@ -19,7 +20,8 @@ object CryptoModule {
 
     @Provides
     @Singleton
-    fun providePoloniexClient(): PoloniexWebSocketClient = PoloniexWebSocketClient()
+    fun providePoloniexClient(client: OkHttpClient): PoloniexWebSocketClient =
+        PoloniexWebSocketClient(client)
 
 
 

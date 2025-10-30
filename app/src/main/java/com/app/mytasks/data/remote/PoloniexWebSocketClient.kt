@@ -10,10 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.delay
 import okhttp3.*
+import javax.inject.Inject
 
-class PoloniexWebSocketClient {
+class PoloniexWebSocketClient @Inject constructor(
+    private val client: OkHttpClient
+) {
 
-    private val client = OkHttpClient()
     private var webSocket: WebSocket? = null
     private val endpoint = "wss://ws.poloniex.com/ws/public"
 
@@ -35,6 +37,7 @@ class PoloniexWebSocketClient {
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
+                Log.d("PoloniexWS", "Received: $text")
                 trySend(text)
             }
 
@@ -44,9 +47,11 @@ class PoloniexWebSocketClient {
                 // Delay closing to ensure no concurrent send crash
                 try {
                     webSocket.close(1001, "Unexpected disconnect")
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
                 close() // just closes the channel, no exception propagation
             }
+
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 Log.d("PoloniexWS", "🔌 Closed: $reason")
             }
@@ -65,7 +70,7 @@ class PoloniexWebSocketClient {
 
         awaitClose {
             webSocket?.close(1000, "Closed by user")
-            client.dispatcher.executorService.shutdown()
+         //   client.dispatcher.executorService.shutdown()
         }
     }
 
