@@ -25,6 +25,7 @@ A task management app built using Jetpack Compose, Kotlin, and Room Database. It
 - Sorting & Filtering: Easily sort and filter tasks based on different criteria
 - Theme Customization: Choose a primary UI color and persist the selection
 - Progress Indicator: Animated circular progress bar to track task completion
+- Crypto Live tracker using websocket
 
 
 

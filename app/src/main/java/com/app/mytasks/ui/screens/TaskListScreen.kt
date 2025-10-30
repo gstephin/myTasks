@@ -116,7 +116,7 @@ fun TaskListScreen(
         Box(modifier = Modifier.padding(padding)) {
             when (selectedIndex) {
                 0 -> TaskTab(viewModel, onTaskClick, snackbarHostState)
-                1 -> CryptoListTab()
+                1 -> CryptoScreen()
             }
         }
     }
