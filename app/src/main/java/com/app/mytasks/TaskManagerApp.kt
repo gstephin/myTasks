@@ -15,7 +15,6 @@ import com.app.mytasks.util.ColorPreferences
 import com.app.mytasks.ui.screens.SettingsScreen
 import com.app.mytasks.ui.screens.TaskCreationScreen
 import com.app.mytasks.ui.screens.TaskDetailScreen
-import com.app.mytasks.ui.screens.TaskListScreen
 import com.app.mytasks.ui.theme.TaskManagerTheme
 import com.app.mytasks.viemodel.AuthViewModel
 import com.app.mytasks.viemodel.TaskViewModel
@@ -60,12 +59,12 @@ fun TaskManagerApp(viewModel: TaskViewModel, authViewModel: AuthViewModel) {
             }
 
             composable("task_list") {
-                TaskListScreen(
+               /* TaskListScreen(
                     viewModel = viewModel,
                     onTaskClick = { navController.navigate("task_detail/${it.id}") },
                     onAddTask = { navController.navigate("task_creation") },
                     onSettingsClick = { navController.navigate("settings") } // Add this
-                )
+                )*/
             }
             composable("task_creation") {
                 TaskCreationScreen(

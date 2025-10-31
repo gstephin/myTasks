@@ -48,7 +48,7 @@ import com.app.mytasks.viemodel.TaskViewModel
  *
  * @author Stephin
  * @date 2025-03-12
- */
+ *//*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
@@ -113,12 +113,7 @@ fun TaskListScreen(
             }
         }
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
-            when (selectedIndex) {
-                0 -> TaskTab(viewModel, onTaskClick, snackbarHostState)
-                1 -> CryptoScreen()
-            }
-        }
+
     }
 
 }
@@ -144,6 +139,6 @@ fun BouncyFAB(onAddTask: () -> Unit) {
     }
 }
 
-data class DraggableItem(val index: Int)
+*/data class DraggableItem(val index: Int)
 
 // Updated FilterDropdown

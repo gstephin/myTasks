@@ -3,7 +3,12 @@ package com.app.mytasks
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.app.mytasks.ui.screens.navigation.ParentNav
 import com.app.mytasks.util.ColorPreferences
 import com.app.mytasks.ui.theme.TaskManagerTheme
 import com.app.mytasks.viemodel.AuthViewModel
@@ -23,7 +28,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-        @Inject lateinit var colorPreferences: ColorPreferences
+    @Inject
+    lateinit var colorPreferences: ColorPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +40,12 @@ class MainActivity : ComponentActivity() {
             val authViewModel: AuthViewModel = hiltViewModel()
 
             TaskManagerTheme(colorPreferences = colorPreferences) {
-                TaskManagerApp(viewModel,authViewModel)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.primary
+                ) {
+                    ParentNav(viewModel, authViewModel)
+                }
             }
         }
     }

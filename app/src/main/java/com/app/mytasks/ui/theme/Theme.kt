@@ -12,25 +12,26 @@ import androidx.compose.ui.graphics.Color
 import com.app.mytasks.util.ColorPreferences
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF6200EE), // Default will be overridden
-    secondary = Color(0xFF03DAC6),
-    background = Color(0xFFFFFFFF),
-    surface = Color(0xFFF5F5F5),
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black
-)
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFBB86FC), // Default will be overridden
-    secondary = Color(0xFF03DAC6),
-    background = Color(0xFF121212),
-    surface = Color(0xFF1E1E1E),
-    onPrimary = Color.Black,
-    onSecondary = Color.Black,
-    onBackground = Color.White,
-    onSurface = Color.White
+    primary = Black,
+    secondary = Grey,
+    tertiary = Blue
+)
+
+private val LightColorScheme = lightColorScheme(
+    primary = Black,
+    secondary = Grey,
+    tertiary = Blue
+
+    /* Other default colors to override
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+    */
 )
 
 @Composable

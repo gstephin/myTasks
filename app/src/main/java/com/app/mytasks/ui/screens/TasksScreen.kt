@@ -81,10 +81,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskTab(
+fun TasksScreen(
     viewModel: TaskViewModel,
     onTaskClick: (Task) -> Unit,
-    snackBarHostState: SnackbarHostState
 ) {
 
     var sortBy by remember { mutableStateOf("priority") }
@@ -370,14 +369,14 @@ fun TaskTab(
                                     SwipeToDismissBoxValue.EndToStart -> {
                                         scope.launch {
                                             viewModel.deleteTask(task)
-                                            val result = snackBarHostState.showSnackbar(
+                                        /*    val result = snackBarHostState.showSnackbar(
                                                 message = "Task deleted",
                                                 actionLabel = "Undo",
                                                 duration = SnackbarDuration.Short
                                             )
                                             if (result == SnackbarResult.ActionPerformed) {
                                                 viewModel.undoDelete(task)
-                                            }
+                                            }*/
                                         }
                                         true
                                     }
@@ -385,14 +384,14 @@ fun TaskTab(
                                     SwipeToDismissBoxValue.StartToEnd -> {
                                         scope.launch {
                                             viewModel.completeTask(task)
-                                            val result = snackBarHostState.showSnackbar(
+                                         /*   val result = snackBarHostState.showSnackbar(
                                                 message = "Task Completed",
                                                 actionLabel = "Undo",
                                                 duration = SnackbarDuration.Short
                                             )
                                             if (result == SnackbarResult.ActionPerformed) {
                                                 viewModel.undoComplete(task)
-                                            }
+                                            }*/
                                         }
                                         false
                                     }
