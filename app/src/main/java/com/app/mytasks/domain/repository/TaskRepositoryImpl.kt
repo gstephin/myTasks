@@ -4,6 +4,7 @@ import com.app.mytasks.data.entities.Task
 import com.app.mytasks.data.dao.TaskDao
 import com.app.mytasks.data.remote.ApiService
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import javax.inject.Inject
 
 /**
@@ -31,5 +32,10 @@ class TaskRepositoryImpl @Inject constructor(
     override suspend fun deleteTask(task: Task) = dao.delete(task)
 
     override suspend fun getAllTasksFlow(): Flow<List<Task>> = dao.getAllTasksFlow()
+
+
+    override suspend fun getTasksByDate(startOfDay: Long, endOfDay: Long): Flow<List<Task>> {
+        return dao.getTasksByDate(startOfDay,endOfDay)
+    }
 
 }

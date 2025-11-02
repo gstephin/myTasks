@@ -1,0 +1,480 @@
+package com.app.mytasks.ui.screens.home
+
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import com.app.mytasks.R
+import com.app.mytasks.data.entities.Priority
+import com.app.mytasks.data.entities.Task
+import com.app.mytasks.ui.screens.navigation.Destinations
+import com.app.mytasks.ui.theme.Black
+import com.app.mytasks.ui.theme.Blue
+import com.app.mytasks.ui.theme.Grey
+import com.app.mytasks.ui.theme.GreyLight
+import com.app.mytasks.ui.theme.White
+import com.app.mytasks.viemodel.TaskViewModel
+import com.kizitonwose.calendar.compose.WeekCalendar
+import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.MessageCircle
+import compose.icons.feathericons.Paperclip
+import compose.icons.feathericons.Share2
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+
+/**
+ * Components
+ *
+ * @author stephingeorge
+ * @date 02/11/2025
+ */
+@Composable
+fun InlineTitleIconComponent() {
+    val myId = "inlineContent"
+    val text = buildAnnotatedString {
+        append("Manage\nyour tasks")
+        // Append a placeholder string "[icon]" and attach an annotation "inlineContent" on it.
+        appendInlineContent(myId, "[icon]")
+    }
+
+    val inlineContent = mapOf(
+        Pair(
+            myId,
+            InlineTextContent(
+                Placeholder(
+                    width = 60.sp,
+                    height = 60.sp,
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                )
+            ) {
+                Image(
+                    painter = painterResource(
+                        id = R.drawable.pencil
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 7.dp)
+                        .size(50.dp)
+                )
+            }
+        )
+    )
+
+    Text(
+        text = text,
+        color = Black,
+        fontWeight = FontWeight.Normal,
+        fontSize = 50.sp,
+        lineHeight = 48.sp,
+        modifier = Modifier.padding(start = 27.dp, end = 5.dp),
+        inlineContent = inlineContent
+    )
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun WeekCalenderSection(
+    navController: NavController,
+    viewModel: TaskViewModel = hiltViewModel()
+) {
+    val dateState by viewModel.dateUiState.collectAsStateWithLifecycle()
+
+    val listTasks = dateState.listTasks
+    val selectedDate = dateState.selectedDate
+
+    val startDate = remember { selectedDate.minusDays(30) }
+    val endDate = remember { selectedDate.plusDays(30) }
+
+    val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
+
+    val state = rememberWeekCalendarState(
+        startDate = startDate,
+        endDate = endDate,
+        firstVisibleWeekDate = selectedDate,
+        firstDayOfWeek = firstDayOfWeek
+    )
+
+    Column {
+        WeekCalendar(
+            modifier = Modifier
+                .background(color = Black)
+                .padding(horizontal = 20.dp, vertical = 5.dp),
+            state = state,
+            dayContent = { day ->
+                Day(date = day.date, isSelected = selectedDate == day.date) { clicked ->
+                    if (selectedDate != clicked) {
+                        viewModel.setSelectedDate(clicked)
+                    }
+                }
+            }
+        )
+
+        AnimatedContent(
+            targetState = dateState.hasTasks,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(200)).togetherWith(
+                    fadeOut(animationSpec = tween(200))
+                )
+            },
+            label = "",
+        ) { targetState ->
+            when (targetState) {
+                true -> {
+                     TasksListSection(listTasks, navController)
+                }
+
+                else -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(340.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.nothing),
+                            contentDescription = null,
+                            modifier = Modifier.size(145.dp)
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(9.dp)
+                        ) {
+                            Text(
+                                text = "No Tasks",
+                                fontSize = 17.sp,
+                                color = White,
+                                fontWeight = FontWeight.Medium,
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = "There are no specific tasks tied to this date.",
+                                fontSize = 13.sp,
+                                color = White,
+                                fontWeight = FontWeight.Normal,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+private val dateFormatter = DateTimeFormatter.ofPattern("dd")
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun Day(
+    date: LocalDate,
+    isSelected: Boolean,
+    onClick: (LocalDate) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .clickable { onClick(date) },
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(45.dp)
+                    .height(73.dp)
+                    .background(
+                        color = if (isSelected) White else Black,
+                        shape = RoundedCornerShape(12.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = date.dayOfWeek.toString().substring(0, 3).lowercase()
+                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
+                        fontSize = 14.sp,
+                        color = if (isSelected) Black else Color.Gray,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = dateFormatter.format(date),
+                        fontSize = 15.sp,
+                        color = if (isSelected) Black else White,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun TasksListSection(
+    listTasks: List<Task>,
+    navController: NavController
+) {
+    LazyColumn(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 4.dp),
+        contentPadding = PaddingValues(bottom = 80.dp)
+    ) {
+        items(
+            items = listTasks,
+            key = { task -> task.id }
+        ) { task ->
+            when (task.priority) {
+                Priority.HIGH -> {
+                    CardTask(
+                        task = task,
+                        onClick = {
+                            navController.navigate(Destinations.Details(task.id))
+                        }
+                    )
+                }
+
+                else -> {
+                    CardTask(
+                        task = task,
+                        onClick = {
+                            navController.navigate(Destinations.Details(task.id))
+                        },
+                        containerColor = Grey,
+                        primaryColor = White,
+                        secondaryColor = White,
+                        backgroundColor = GreyLight
+                    )
+                }
+            }
+
+        }
+    }
+
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun CardTask(
+    task: Task,
+    onClick: () -> Unit,
+    containerColor: Color = Blue,
+    primaryColor: Color = Black,
+    secondaryColor: Color = GreyLight,
+    backgroundColor: Color = White
+) {
+    Card(
+        modifier = Modifier
+            .padding(bottom = 16.dp)
+            .fillMaxWidth()
+            .height(210.dp)
+            .padding(horizontal = 25.dp)
+            .clickable {
+                onClick()
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = containerColor
+        ),
+        shape = RoundedCornerShape(15.dp)
+    ) {
+
+        Column(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 15.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(33.dp)
+                        .background(backgroundColor, shape = RoundedCornerShape(18.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = task.priority.toString(),
+                        fontSize = 12.sp,
+                        color = primaryColor,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .size(33.dp)
+                        .background(backgroundColor, shape = CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = FeatherIcons.Share2,
+                        contentDescription = null,
+                        tint = primaryColor,
+                        modifier = Modifier
+                            .size(17.dp)
+                            .clip(CircleShape)
+                    )
+                }
+            }
+
+            Text(
+                text = task.title,
+                fontSize = 20.sp,
+                color = primaryColor,
+                fontWeight = FontWeight.Medium,
+                maxLines = 2
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(7.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.calendar_icon),
+                    contentDescription = null,
+                    tint = primaryColor,
+                    modifier = Modifier.size(16.dp)
+                )
+
+                Text(
+                    text = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(task.dueDate),
+                    fontSize = 13.sp,
+                    color = primaryColor,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.profile_photo),
+                    contentDescription = "Profile Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(34.dp)
+                        .clip(CircleShape)
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(
+                        space = 11.dp,
+                        alignment = Alignment.End
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = FeatherIcons.MessageCircle,
+                            contentDescription = null,
+                            tint = secondaryColor,
+                            modifier = Modifier.size(17.dp)
+                        )
+                        Text(
+                            text = "4",
+                            fontSize = 12.sp,
+                            color = secondaryColor,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = FeatherIcons.Paperclip,
+                            contentDescription = null,
+                            tint = secondaryColor,
+                            modifier = Modifier.size(17.dp)
+                        )
+                        Text(
+                            text = "16",
+                            fontSize = 12.sp,
+                            color = secondaryColor,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
+                }
+
+            }
+        }
+
+    }
+}

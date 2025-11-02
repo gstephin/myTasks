@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.*
 import com.app.mytasks.data.entities.Task
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 /**
  * TaskDao.kt
@@ -30,6 +31,9 @@ interface TaskDao {
 
     @Delete
     suspend fun delete(task: Task)
+
+    @Query("SELECT * FROM tasks WHERE dueDate BETWEEN :startOfDay AND :endOfDay")
+    fun getTasksByDate(startOfDay: Long, endOfDay: Long): Flow<List<Task>>
 
     @Update
     suspend fun update(task: Task)

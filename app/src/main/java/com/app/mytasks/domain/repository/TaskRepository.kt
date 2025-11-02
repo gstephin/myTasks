@@ -2,6 +2,7 @@ package com.app.mytasks.domain.repository
 
 import com.app.mytasks.data.entities.Task
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 // domain/repository/TaskRepository.kt
 interface TaskRepository {
@@ -12,4 +13,7 @@ interface TaskRepository {
     suspend fun getTaskCount(): Int
     suspend fun deleteTask(task: Task)
     suspend fun getAllTasksFlow(): Flow<List<Task>>
+
+    suspend fun getTasksByDate(startOfDay: Long, endOfDay: Long): Flow<List<Task>>
+
 }

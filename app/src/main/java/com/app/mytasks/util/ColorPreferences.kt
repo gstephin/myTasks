@@ -13,7 +13,7 @@ class ColorPreferences(private val context: Context) {
 
     companion object {
         private val PRIMARY_COLOR_KEY = intPreferencesKey("primary_color")
-        const val DEFAULT_COLOR = 0xFF6200EE.toInt()
+        const val DEFAULT_COLOR = 0xFFb5cff8.toInt()
     }
 
     val primaryColor: Flow<Int> = context.dataStore.data

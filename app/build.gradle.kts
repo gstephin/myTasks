@@ -76,7 +76,18 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:21.2.0") // for Google Sign-In (optional)
 
+
+
+    // Compose Calendar library
+    implementation ("com.kizitonwose.calendar:compose:2.6.0-beta02")
+
+    // Compose Date Picker Dialog Library
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:core:1.2.0")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.2.0")
     // Use kapt for room-compiler instead of implementation
+    implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
+
+
     implementation(libs.lottie.compose)
     kapt(libs.androidx.room.compiler)
     implementation(libs.kotlinx.coroutines.android)

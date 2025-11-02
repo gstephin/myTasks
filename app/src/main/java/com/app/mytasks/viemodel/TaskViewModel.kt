@@ -2,21 +2,32 @@ package com.app.mytasks.viemodel
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.mytasks.data.entities.Task
 import com.app.mytasks.data.dao.TaskDao
 import com.app.mytasks.domain.repository.TaskRepository
+import com.app.mytasks.ui.screens.home.DateUiState
 import com.app.mytasks.util.FileUtil
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 import javax.inject.Inject
 
 
@@ -42,6 +53,33 @@ class TaskViewModel @Inject constructor(
 
     private val _pendingActions = MutableStateFlow<List<PendingAction>>(emptyList())
     val pendingActions: StateFlow<List<PendingAction>> = _pendingActions
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val selectedDate = MutableStateFlow(LocalDate.now())
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val listTasks =
+        selectedDate.flatMapLatest { date ->
+            val startOfDay = date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            val endOfDay =
+                date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+            repository.getTasksByDate(startOfDay, endOfDay)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private var _dateUiState = MutableStateFlow(DateUiState())
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    val dateUiState =
+        combine(_dateUiState, listTasks, selectedDate) { dateUiState, listTasks, selectedDate ->
+            dateUiState.copy(
+                selectedDate = selectedDate,
+                listTasks = listTasks,
+                hasTasks = listTasks.isNotEmpty()
+            )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DateUiState())
 
     init {
         viewModelScope.launch {
@@ -87,6 +125,11 @@ class TaskViewModel @Inject constructor(
 
     fun clearPending(action: PendingAction) {
         _pendingActions.update { it.filterNot { it == action } }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setSelectedDate(date: LocalDate) {
+        selectedDate.value = date
     }
 
     sealed class PendingAction(val task: Task) {

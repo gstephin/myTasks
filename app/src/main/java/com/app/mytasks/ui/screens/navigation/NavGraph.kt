@@ -33,7 +33,7 @@ fun NavGraphBuilder.bottomNavGraph(
         exitTransition = { fadeOut(animationSpec = tween(300)) }
     ) {
         composable<Destinations.Home> {
-            HomeScreen(colorPreferences, authViewModel)
+            HomeScreen(colorPreferences, authViewModel,navController)
         }
         composable<Destinations.Tasks> {
             TasksScreen(viewModel, onTaskClick = {navController.navigate(Destinations.AddTask)},)

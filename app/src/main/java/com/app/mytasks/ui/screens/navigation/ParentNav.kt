@@ -58,7 +58,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 fun ParentNav(viewModel: TaskViewModel, authViewModel: AuthViewModel) {
     val navController = rememberNavController()
     val systemUiController = rememberSystemUiController()
-    val currentUser = authViewModel.repository.currentUser()
     val context = LocalContext.current
     val colorPreferences = remember { ColorPreferences(context) }
 
@@ -67,7 +66,7 @@ fun ParentNav(viewModel: TaskViewModel, authViewModel: AuthViewModel) {
     }
 
     Scaffold(
-        containerColor = Black,
+        containerColor = White,
         bottomBar = {
             // Show bottom bar only when inside the BottomNavGraph
             val navBackStackEntry by navController.currentBackStackEntryAsState()
