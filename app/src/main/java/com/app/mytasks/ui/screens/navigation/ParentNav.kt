@@ -88,7 +88,10 @@ fun RootNavGraph(
     colorPreferences: ColorPreferences
 ) {
     val currentUser = authViewModel.repository.currentUser()
-
+    val density = LocalDensity.current
+    val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
+    val screenHeightPx = with(density) { LocalConfiguration.current.screenHeightDp.dp.toPx() }
+    val defaultOffset = Offset(screenWidthPx / 2, screenHeightPx / 2)
     val startDestination = if (currentUser != null) {
         Destinations.BottomNavGraph
     } else {
@@ -114,7 +117,7 @@ fun RootNavGraph(
         }
 
         // 🔹 Main App (Bottom Navigation)
-        bottomNavGraph(navController, viewModel, authViewModel, colorPreferences)
+        bottomNavGraph(navController, viewModel, authViewModel, colorPreferences,defaultOffset)
     }
 }
 
