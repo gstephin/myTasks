@@ -129,6 +129,7 @@ fun SettingsScreen(
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 12.dp) // 👈 outer padding
                         .height(48.dp),
                     shape = RoundedCornerShape(12.dp)
                 ) {
