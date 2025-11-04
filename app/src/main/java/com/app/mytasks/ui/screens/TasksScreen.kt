@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,6 +26,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.magnifier
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -33,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -40,6 +43,8 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -141,235 +146,247 @@ fun TasksScreen(
         }
     }
     val isEmpty = displayedTasks.isEmpty()
-    if (isEmpty) {
 
-        Box(
-            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-        ) {
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
-            LottieAnimation(
-                composition = composition,
-                iterations = LottieConstants.IterateForever,
-                modifier = Modifier.size(200.dp)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Tasks") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             )
         }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(all = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+    ) { padding ->
+        if (isEmpty) {
 
-            Row(
-                modifier = Modifier.padding(end = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
-                FilterDropdown(filter = filter, onFilterChange = { filter = it })
-                Spacer(modifier = Modifier.width(4.dp)) // Reduce spacing
-                SortDropdown(sortBy = sortBy, onSortChange = { sortBy = it })
-                Spacer(modifier = Modifier.width(4.dp)) // Reduce spacing
-
-
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
+                LottieAnimation(
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever,
+                    modifier = Modifier.size(200.dp)
+                )
             }
-            Text(
-                text = "Task Progress",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-            CircularProgressbar(
-                currentValue = progressValue,
-                maxValue = maxProgressValue,
-                progressBackgroundColor = Color.White,
-                progressIndicatorColor = MaterialTheme.colorScheme.primary,
-                completedColor = Color.Green,
-                modifier = Modifier.padding(16.dp)
-            )
-            Text(
-                text = "Task List",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-
-                horizontalArrangement = Arrangement.SpaceBetween
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(all = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.Start
+                Row(
+                    modifier = Modifier.padding(end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "Total Tasks: $totalTasks",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = "Completed: $completedTasks",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    FilterDropdown(filter = filter, onFilterChange = { filter = it })
+                    Spacer(modifier = Modifier.width(4.dp)) // Reduce spacing
+                    SortDropdown(sortBy = sortBy, onSortChange = { sortBy = it })
+                    Spacer(modifier = Modifier.width(4.dp)) // Reduce spacing
+
+
                 }
-                Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    IconButton(
-                        onClick = { showListView = true },
-                        modifier = Modifier.size(36.dp) // Increase touch target
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.list),
-                            contentDescription = "List",
-                            modifier = Modifier.size(30.dp),
-                            tint = if (showListView) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Task Progress",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                CircularProgressbar(
+                    currentValue = progressValue,
+                    maxValue = maxProgressValue,
+                    progressBackgroundColor = Color.White,
+                    progressIndicatorColor = MaterialTheme.colorScheme.primary,
+                    completedColor = Color.Green,
+                    modifier = Modifier.padding(16.dp)
+                )
+                Text(
+                    text = "Task List",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
 
-                        )
-                    }
-                    IconButton(
-                        onClick = { showListView = false },
-                        modifier = Modifier.size(36.dp) // Increase touch target
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.menu),
-                            contentDescription = "Grid",
-                            modifier = Modifier.size(20.dp),// Increase icon size
-                            tint = if (!showListView) MaterialTheme.colorScheme.primary else LocalContentColor.current
-
-                        )
-                    }
-                }
-            }
-
-            if (!showListView) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    items(20) { index ->
+
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.Start
+                    ) {
                         Text(
-                            "Grid item #$index",
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth()
+                            text = "Total Tasks: $totalTasks",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = "Completed: $completedTasks",
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
+                    Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        IconButton(
+                            onClick = { showListView = true },
+                            modifier = Modifier.size(36.dp) // Increase touch target
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.list),
+                                contentDescription = "List",
+                                modifier = Modifier.size(30.dp),
+                                tint = if (showListView) MaterialTheme.colorScheme.primary else LocalContentColor.current
+
+                            )
+                        }
+                        IconButton(
+                            onClick = { showListView = false },
+                            modifier = Modifier.size(36.dp) // Increase touch target
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.menu),
+                                contentDescription = "Grid",
+                                modifier = Modifier.size(20.dp),// Increase icon size
+                                tint = if (!showListView) MaterialTheme.colorScheme.primary else LocalContentColor.current
+
+                            )
+                        }
+                    }
                 }
-            } else LazyColumn(
-                modifier = Modifier.pointerInput(key1 = stateList) {
-                    detectDragGesturesAfterLongPress(
-                        onDragStart = { offset ->
-                            stateList.layoutInfo.visibleItemsInfo.firstOrNull { item ->
-                                offset.y.toInt() in item.offset..(item.offset + item.size)
-                            }
-                                ?.also {
-                                    (it.contentType as? DraggableItem)?.let { draggableItem ->
-                                        draggingItem = it
-                                        draggingItemIndex = draggableItem.index
+
+                if (!showListView) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(20) { index ->
+                            Text(
+                                "Grid item #$index",
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
+                    }
+                } else LazyColumn(
+                    modifier = Modifier.pointerInput(key1 = stateList) {
+                        detectDragGesturesAfterLongPress(
+                            onDragStart = { offset ->
+                                stateList.layoutInfo.visibleItemsInfo.firstOrNull { item ->
+                                    offset.y.toInt() in item.offset..(item.offset + item.size)
+                                }
+                                    ?.also {
+                                        (it.contentType as? DraggableItem)?.let { draggableItem ->
+                                            draggingItem = it
+                                            draggingItemIndex = draggableItem.index
+                                        }
+                                    }
+                            },
+                            onDrag = { change, dragAmount ->
+                                change.consume()
+                                delta += dragAmount.y
+
+                                val currentDraggingItemIndex =
+                                    draggingItemIndex ?: return@detectDragGesturesAfterLongPress
+                                val currentDraggingItem =
+                                    draggingItem ?: return@detectDragGesturesAfterLongPress
+
+                                val startOffset = currentDraggingItem.offset + delta
+                                val endOffset =
+                                    currentDraggingItem.offset + currentDraggingItem.size + delta
+                                val middleOffset = startOffset + (endOffset - startOffset) / 2
+
+                                val targetItem =
+                                    stateList.layoutInfo.visibleItemsInfo.find { item ->
+                                        middleOffset.toInt() in item.offset..item.offset +
+                                                item.size && currentDraggingItem.index != item.index
+                                                && item.contentType is DraggableItem
+                                    }
+
+                                if (targetItem != null) {
+                                    val targetIndex =
+                                        (targetItem.contentType as DraggableItem).index
+                                    onMove(currentDraggingItemIndex, targetIndex)
+                                    draggingItemIndex = targetIndex
+                                    delta += currentDraggingItem.offset - targetItem.offset
+                                    draggingItem = targetItem
+                                } else {
+                                    val startOffsetToTop =
+                                        startOffset - stateList.layoutInfo.viewportStartOffset
+                                    val endOffsetToBottom =
+                                        endOffset - stateList.layoutInfo.viewportEndOffset
+                                    val scroll = when {
+                                        startOffsetToTop < 0 -> startOffsetToTop.coerceAtMost(
+                                            0f
+                                        )
+
+                                        endOffsetToBottom > 0 -> endOffsetToBottom.coerceAtLeast(
+                                            0f
+                                        )
+
+                                        else -> 0f
+                                    }
+                                    val canScrollDown =
+                                        currentDraggingItemIndex != displayedTasks.size - 1 && endOffsetToBottom > 0
+                                    val canScrollUp =
+                                        currentDraggingItemIndex != 0 && startOffsetToTop < 0
+                                    if (scroll != 0f && (canScrollUp || canScrollDown)) {
+                                        scrollChannel.trySend(scroll)
                                     }
                                 }
-                        },
-                        onDrag = { change, dragAmount ->
-                            change.consume()
-                            delta += dragAmount.y
+                            },
+                            onDragEnd = {
+                                draggingItem = null
+                                draggingItemIndex = null
+                                delta = 0f
+                            },
+                            onDragCancel = {
+                                draggingItem = null
+                                draggingItemIndex = null
+                                delta = 0f
+                            },
 
-                            val currentDraggingItemIndex =
-                                draggingItemIndex ?: return@detectDragGesturesAfterLongPress
-                            val currentDraggingItem =
-                                draggingItem ?: return@detectDragGesturesAfterLongPress
+                            )
 
-                            val startOffset = currentDraggingItem.offset + delta
-                            val endOffset =
-                                currentDraggingItem.offset + currentDraggingItem.size + delta
-                            val middleOffset = startOffset + (endOffset - startOffset) / 2
+                    },
+                    state = stateList,
+                ) {
 
-                            val targetItem =
-                                stateList.layoutInfo.visibleItemsInfo.find { item ->
-                                    middleOffset.toInt() in item.offset..item.offset +
-                                            item.size && currentDraggingItem.index != item.index
-                                            && item.contentType is DraggableItem
-                                }
+                    itemsIndexed(
+                        items = displayedTasks,
+                        key = { task, id -> id.id },
+                        contentType = { index, _ -> DraggableItem(index = index) }) { index, task ->
+                        AnimatedVisibility(
+                            visible = displayedTasks.contains(task),
+                            enter = slideInVertically(initialOffsetY = { -it }),
+                            exit = slideOutVertically(targetOffsetY = { -it })
+                        ) {
+                            var offsetX by remember { mutableStateOf(0f) }
+                            val modifier = if (draggingItemIndex == index) {
+                                Modifier
+                                    .zIndex(1f)
+                                    .graphicsLayer {
+                                        translationY = delta
+                                    }
+                                    .offset(x = offsetX.dp)
 
-                            if (targetItem != null) {
-                                val targetIndex =
-                                    (targetItem.contentType as DraggableItem).index
-                                onMove(currentDraggingItemIndex, targetIndex)
-                                draggingItemIndex = targetIndex
-                                delta += currentDraggingItem.offset - targetItem.offset
-                                draggingItem = targetItem
                             } else {
-                                val startOffsetToTop =
-                                    startOffset - stateList.layoutInfo.viewportStartOffset
-                                val endOffsetToBottom =
-                                    endOffset - stateList.layoutInfo.viewportEndOffset
-                                val scroll = when {
-                                    startOffsetToTop < 0 -> startOffsetToTop.coerceAtMost(
-                                        0f
-                                    )
-
-                                    endOffsetToBottom > 0 -> endOffsetToBottom.coerceAtLeast(
-                                        0f
-                                    )
-
-                                    else -> 0f
-                                }
-                                val canScrollDown =
-                                    currentDraggingItemIndex != displayedTasks.size - 1 && endOffsetToBottom > 0
-                                val canScrollUp =
-                                    currentDraggingItemIndex != 0 && startOffsetToTop < 0
-                                if (scroll != 0f && (canScrollUp || canScrollDown)) {
-                                    scrollChannel.trySend(scroll)
-                                }
+                                Modifier
                             }
-                        },
-                        onDragEnd = {
-                            draggingItem = null
-                            draggingItemIndex = null
-                            delta = 0f
-                        },
-                        onDragCancel = {
-                            draggingItem = null
-                            draggingItemIndex = null
-                            delta = 0f
-                        },
 
-                        )
-
-                },
-                state = stateList,
-            ) {
-
-                itemsIndexed(
-                    items = displayedTasks,
-                    key = { task, id -> id.id },
-                    contentType = { index, _ -> DraggableItem(index = index) }) { index, task ->
-                    AnimatedVisibility(
-                        visible = displayedTasks.contains(task),
-                        enter = slideInVertically(initialOffsetY = { -it }),
-                        exit = slideOutVertically(targetOffsetY = { -it })
-                    ) {
-                        var offsetX by remember { mutableStateOf(0f) }
-                        val modifier = if (draggingItemIndex == index) {
-                            Modifier
-                                .zIndex(1f)
-                                .graphicsLayer {
-                                    translationY = delta
-                                }
-                                .offset(x = offsetX.dp)
-
-                        } else {
-                            Modifier
-                        }
-
-                        val dismissState = rememberSwipeToDismissBoxState(
-                            confirmValueChange = { dismissValue ->
-                                when (dismissValue) {
-                                    SwipeToDismissBoxValue.EndToStart -> {
-                                        scope.launch {
-                                            viewModel.deleteTask(task)
-                                        /*    val result = snackBarHostState.showSnackbar(
+                            val dismissState = rememberSwipeToDismissBoxState(
+                                confirmValueChange = { dismissValue ->
+                                    when (dismissValue) {
+                                        SwipeToDismissBoxValue.EndToStart -> {
+                                            scope.launch {
+                                                viewModel.deleteTask(task)
+                                                /*    val result = snackBarHostState.showSnackbar(
                                                 message = "Task deleted",
                                                 actionLabel = "Undo",
                                                 duration = SnackbarDuration.Short
@@ -377,14 +394,14 @@ fun TasksScreen(
                                             if (result == SnackbarResult.ActionPerformed) {
                                                 viewModel.undoDelete(task)
                                             }*/
+                                            }
+                                            true
                                         }
-                                        true
-                                    }
 
-                                    SwipeToDismissBoxValue.StartToEnd -> {
-                                        scope.launch {
-                                            viewModel.completeTask(task)
-                                         /*   val result = snackBarHostState.showSnackbar(
+                                        SwipeToDismissBoxValue.StartToEnd -> {
+                                            scope.launch {
+                                                viewModel.completeTask(task)
+                                                /*   val result = snackBarHostState.showSnackbar(
                                                 message = "Task Completed",
                                                 actionLabel = "Undo",
                                                 duration = SnackbarDuration.Short
@@ -392,49 +409,50 @@ fun TasksScreen(
                                             if (result == SnackbarResult.ActionPerformed) {
                                                 viewModel.undoComplete(task)
                                             }*/
+                                            }
+                                            false
                                         }
-                                        false
+
+                                        else -> false
                                     }
 
-                                    else -> false
-                                }
-
-                            })
-                        SwipeToDismissBox(
-                            state = dismissState,
-                            enableDismissFromStartToEnd = true,
-                            enableDismissFromEndToStart = true,
-                            backgroundContent = {
+                                })
+                            SwipeToDismissBox(
+                                state = dismissState,
+                                enableDismissFromStartToEnd = true,
+                                enableDismissFromEndToStart = true,
+                                backgroundContent = {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(horizontal = 16.dp, vertical = 4.dp)
+                                    )
+                                },
+                            ) {
+                                // Apply swipe offset to move the item while swiping
                                 Box(
                                     modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(horizontal = 16.dp, vertical = 4.dp)
-                                )
-                            },
-                        ) {
-                            // Apply swipe offset to move the item while swiping
-                            Box(
-                                modifier = Modifier
-                                    .offset(x = offsetX.dp) // Moves the item visually
-                                    .fillMaxWidth()
-                                    .background(Color.White)
-                                    .padding(4.dp)
-                            ) {
-                                TaskItem(
-                                    task = task,
-                                    onClick = { onTaskClick(task) },
-                                    onDelete = { viewModel.deleteTask(task) },
-                                    modifier = modifier
-                                )
+                                        .offset(x = offsetX.dp) // Moves the item visually
+                                        .fillMaxWidth()
+                                        .background(Color.White)
+                                        .padding(4.dp)
+                                ) {
+                                    TaskItem(
+                                        task = task,
+                                        onClick = { onTaskClick(task) },
+                                        onDelete = { viewModel.deleteTask(task) },
+                                        modifier = modifier
+                                    )
+                                }
+
                             }
 
-                        }
 
+                        }
 
                     }
 
                 }
-
             }
         }
     }
@@ -468,7 +486,7 @@ fun FilterDropdown(filter: String, onFilterChange: (String) -> Unit) {
         }
     }
 }
-
+data class DraggableItem(val index: Int)
 // Updated SortDropdown
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -484,7 +502,10 @@ fun SortDropdown(sortBy: String, onSortChange: (String) -> Unit) {
             onValueChange = {},
             readOnly = true,
             label = { Text("Sort") },
-            modifier = Modifier.menuAnchor(enabled = false, type = MenuAnchorType.PrimaryNotEditable)
+            modifier = Modifier.menuAnchor(
+                enabled = false,
+                type = MenuAnchorType.PrimaryNotEditable
+            )
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             listOf("priority", "dueDate", "alphabetically").forEach {

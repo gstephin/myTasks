@@ -71,11 +71,11 @@ fun SettingsScreen(
     val scope = rememberCoroutineScope()
     val currentColor by colorPreferences.primaryColor.collectAsState(initial = ColorPreferences.DEFAULT_COLOR)
     val colorOptions = listOf(
-        "Purple" to Color(0xFF6200EE),
-        "Blue" to Color(0xFF1976D2),
-        "Green" to Color(0xFF2E7D32),
-        "Red" to Color(0xFFD32F2F),
-        "Orange" to Color(0xFFF57C00)
+        "Purple" to Color(0xFFD0BCFF),
+        "Blue" to Color(0xFFb5cff8),
+        "Dark grey" to Color(0xFF313131),
+        "Red" to Color(0xFF7D5260),
+        "Grey" to Color(0xFFCCC2DC)
     )
 
     Scaffold(
