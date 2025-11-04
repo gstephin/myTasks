@@ -251,7 +251,7 @@ fun Day(
                 ) {
                     Text(
                         text = date.dayOfWeek.toString().substring(0, 3).lowercase()
-                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
+                            .replaceFirstChar { it.titlecase(Locale.ROOT)  },
                         fontSize = 14.sp,
                         color = if (isSelected) Black else Color.Gray,
                         fontWeight = FontWeight.Medium
