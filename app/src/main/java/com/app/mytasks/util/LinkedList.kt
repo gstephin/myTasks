@@ -1,4 +1,4 @@
-package com.app.mytasks
+package com.app.mytasks.util
 
 /**
  * LinkedList.kt
