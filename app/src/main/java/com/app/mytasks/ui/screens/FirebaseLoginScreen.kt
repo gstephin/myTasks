@@ -1,14 +1,17 @@
 package com.app.mytasks.ui.screens
 
+import android.util.Patterns
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,6 +46,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -80,50 +85,48 @@ fun LoginScreen(
             email.isNotBlank() && password.isNotBlank()
 
     // --- Background gradient matching theme ---
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
-                        MaterialTheme.colorScheme.surface
-                    )
+    Surface {
+        Column(modifier = Modifier.fillMaxSize()) {
+
+            val color = if (isSystemInDarkTheme()) Color.Black else Color.White
+
+            Box(contentAlignment = Alignment.TopCenter) {
+                Image(
+                    painter = painterResource(R.drawable.shape2),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(fraction = .46f)
                 )
-            )
-            .systemBarsPadding()
-            .imePadding(),
-        contentAlignment = Alignment.Center
-    ) {
-        Card(
-            modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-        ) {
+                Column(
+                    modifier = Modifier.padding(vertical = 30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.google),
+                        contentDescription = "App logo",
+                        modifier = Modifier.size(96.dp)
+
+                    )
+
+                    Spacer(Modifier.height(50.dp))
+
+                    // 🟢 App title
+                    Text(
+                        "Welcome Back",
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        color = Color.Black
+                    )
+                }
+            }
             Column(
                 modifier = Modifier
                     .padding(horizontal = 24.dp, vertical = 32.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // 🟣 App logo
-                Image(
-                    painter = painterResource(id = R.mipmap.ic_launcher),
-                    contentDescription = "App logo",
-                    modifier = Modifier.size(96.dp)
-                )
 
-                Spacer(Modifier.height(16.dp))
-
-                // 🟢 App title
-                Text(
-                    "Welcome Back",
-                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.primary
-                )
 
                 Text(
                     "Sign in to continue",
@@ -140,7 +143,7 @@ fun LoginScreen(
                         email = it
                         emailError = when {
                             it.isBlank() -> "Email cannot be empty"
-                            !android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches() ->
+                            !Patterns.EMAIL_ADDRESS.matcher(it).matches() ->
                                 "Enter a valid email"
 
                             else -> null
