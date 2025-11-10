@@ -1,14 +1,11 @@
 package com.app.mytasks.viemodel
 
-import android.app.Application
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.mytasks.data.entities.Task
-import com.app.mytasks.data.dao.TaskDao
 import com.app.mytasks.domain.repository.TaskRepository
 import com.app.mytasks.ui.screens.home.DateUiState
 import com.app.mytasks.util.FileUtil
@@ -27,7 +24,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
-import java.util.Date
 import javax.inject.Inject
 
 

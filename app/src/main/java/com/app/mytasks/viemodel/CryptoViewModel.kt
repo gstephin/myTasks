@@ -1,6 +1,5 @@
 package com.app.mytasks.viemodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.mytasks.data.entities.TickerData

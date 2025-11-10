@@ -1,5 +1,7 @@
 package com.app.mytasks.ui.screens.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -20,6 +22,7 @@ import com.app.mytasks.viemodel.AuthViewModel
 import com.app.mytasks.viemodel.TaskViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.bottomNavGraph(
     navController: NavHostController,
     viewModel: TaskViewModel,
@@ -49,7 +52,7 @@ fun NavGraphBuilder.bottomNavGraph(
             )
         }
         composable<Destinations.Home> {
-            HomeScreen(colorPreferences, authViewModel, navController)
+            HomeScreen(navController)
         }
         composable<Destinations.Tasks> {
             TasksScreen(viewModel, onTaskClick = { navController.navigate(Destinations.AddTask) })

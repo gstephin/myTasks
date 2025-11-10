@@ -22,18 +22,16 @@ import com.app.mytasks.viemodel.AuthViewModel
  * @author stephingeorge
  * @date 30/10/2025
  */
+
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    colorPreferences: ColorPreferences,
-    authViewModel: AuthViewModel,
     navController: NavController
 
 ) {
 
-    Scaffold() {
-
-            paddingValues ->
+    Scaffold() { paddingValues ->
         Content(paddingValues, navController)
     }
 }

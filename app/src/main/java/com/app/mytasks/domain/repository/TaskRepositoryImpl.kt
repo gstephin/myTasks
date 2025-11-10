@@ -33,7 +33,6 @@ class TaskRepositoryImpl @Inject constructor(
 
     override suspend fun getAllTasksFlow(): Flow<List<Task>> = dao.getAllTasksFlow()
 
-
     override suspend fun getTasksByDate(startOfDay: Long, endOfDay: Long): Flow<List<Task>> {
         return dao.getTasksByDate(startOfDay,endOfDay)
     }
